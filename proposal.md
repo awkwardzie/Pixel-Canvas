@@ -1,6 +1,7 @@
 # Pixel-Canvas
 
 # Repository
+https://github.com/awkwardzie/Pixel-Canvas
 
 # Description
 Pixel Canvas is going to create a digital canvas where the user can create artwork by selecting pixels. This is relevant to media and digital arts because the user can create pixel artwork.
