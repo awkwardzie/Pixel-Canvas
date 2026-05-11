@@ -74,16 +74,16 @@ DARK_GRAY = (40, 40, 40)
 
 # Click palette colors
 PALETTE_COLORS = [
-    BLACK,   # Starting color
-    WHITE,   # 1 click
-    RED,     # 2 clicks
-    ORANGE,  # 3 clicks
-    YELLOW,  # 4 clicks
-    GREEN,   # 5 clicks
-    BLUE,    # 6 clicks
-    PURPLE,  # 7 clicks
-    PINK,    # 8 clicks
-    BROWN    # 9 clicks
+    BLACK,
+    WHITE,
+    RED,
+    ORANGE,
+    YELLOW,
+    GREEN,
+    BLUE,
+    PURPLE,
+    PINK,
+    BROWN
 ]
 
 # Default selected color
@@ -96,7 +96,7 @@ grid = []
 for row in range(ROWS):
     grid_row = []
     for col in range(COLS):
-        grid_row.append(BLACK)  # Start all squares as black
+        grid_row.append(BLACK)
     grid.append(grid_row)
 
 # Function to Clear Canvas
@@ -201,7 +201,7 @@ while running:
             # Clicking canvas paints
             else:
                 paint_square(mouse_x, mouse_y)
-            # Mouse released
+        # Mouse released
         if event.type == pygame.MOUSEBUTTONUP:
             mouse_held = False
 
