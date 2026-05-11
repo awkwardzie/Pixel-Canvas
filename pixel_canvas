@@ -38,21 +38,21 @@ pygame.display.set_caption(f"Pixel Canvas - {canvas_type}")
 
 # Colors
 BLACK = (0, 0, 0)
-GRAY = (50, 50, 50)
+GRAY = (120, 120, 120)
 
 # Background Color
 screen.fill(BLACK)
 
 # Grid Settings
-PIXEL_SIZE = 5  # Each square is 5x5 pixels
+PIXEL_SIZE = 60  # Each square is 5x5 pixels
 
 # Function to Draw Grid
 def draw_grid():
     for x in range(0, WIDTH, PIXEL_SIZE):
-        pygame.draw.line(screen, GRAY, (x, 0), (x, HEIGHT))
-
-    for y in range(0, HEIGHT, PIXEL_SIZE):
-        pygame.draw.line(screen, GRAY, (0, y), (WIDTH, y))
+        for y in range(0, HEIGHT, PIXEL_SIZE):
+            rect = pygame.Rect(x, y, PIXEL_SIZE, PIXEL_SIZE)
+            pygame.draw.rect(screen, BLACK, rect)   # Fill square
+            pygame.draw.rect(screen, GRAY, rect, 1) # Gray border
 
 # Main Game Loop
 running = True
@@ -68,6 +68,10 @@ while running:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 running = False
+
+  # Redraw background and grid
+    screen.fill(BLACK)
+    draw_grid()
 
     pygame.display.update()
 
