@@ -30,19 +30,6 @@ else:
     HEIGHT = 600
     canvas_type = "Square"
 
-# Initialize Pygame
-pygame.init()
-
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption(f"Pixel Canvas - {canvas_type}")
-
-# Colors
-BLACK = (0, 0, 0)
-GRAY = (120, 120, 120)
-
-# Background Color
-screen.fill(BLACK)
-
 # Grid Settings
 # Start with preferred size
 PREFERRED_PIXEL_SIZE = 60
@@ -56,6 +43,47 @@ PIXEL_SIZE = min(
 # Safety check if window is smaller than preferred size
 if PIXEL_SIZE <= 0:
     PIXEL_SIZE = 60
+
+# Number of rows and columns
+ROWS = HEIGHT // PIXEL_SIZE
+COLS = WIDTH // PIXEL_SIZE
+
+# Initialize Pygame
+pygame.init()
+
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption(f"Pixel Canvas - {canvas_type}")
+
+# Colors
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+GRAY = (120, 120, 120)
+
+# Grid Data Storage
+# Store the color of each square
+grid = []
+
+for row in range(ROWS):
+    grid_row = []
+    for col in range(COLS):
+        grid_row.append(BLACK)  # Start all squares as black
+    grid.append(grid_row)
+
+# Function to Draw Grid
+def draw_grid():
+    for row in range(ROWS):
+        for col in range(COLS):
+            x = col * PIXEL_SIZE
+            y = row * PIXEL_SIZE
+
+            rect = pygame.Rect(x, y, PIXEL_SIZE, PIXEL_SIZE)
+
+            # Fill with saved color
+            pygame.draw.rect(screen, grid[row][col], rect)
+
+            # Draw border
+            pygame.draw.rect(screen, GRAY, rect, 2)
+
 
 # Function to Draw Grid
 def draw_grid():
@@ -80,10 +108,21 @@ while running:
             if event.key == pygame.K_ESCAPE:
                 running = False
 
-  # Redraw background and grid
+        # Mouse click changes black square to white
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            mouse_x, mouse_y = pygame.mouse.get_pos()
+
+            col = mouse_x // PIXEL_SIZE
+            row = mouse_y // PIXEL_SIZE
+
+            # Make sure click is inside grid
+            if row < ROWS and col < COLS:
+                if grid[row][col] == BLACK:
+                    grid[row][col] = WHITE
+
+  # Background Color
     screen.fill(BLACK)
     draw_grid()
-
     pygame.display.update()
 
 # Close Program
