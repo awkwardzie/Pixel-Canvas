@@ -37,16 +37,23 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption(f"Pixel Canvas - {canvas_type}")
 
 # Background color
-WHITE = (255, 255, 255)
-screen.fill(WHITE)
+BLACK = (0, 0, 0)
+screen.fill(BLACK)
 
 # Main Game Loop
 running = True
 
 while running:
     for event in pygame.event.get():
+
+        # Close window using X button
         if event.type == pygame.QUIT:
             running = False
+
+        # Press ESC key to close window
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                running = False
 
     pygame.display.update()
 
