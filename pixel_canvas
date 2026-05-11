@@ -91,6 +91,9 @@ for row in range(ROWS):
         grid_row.append(BLACK)  # Start all squares as black
     grid.append(grid_row)
 
+# Keeps track of squares already changed during drag
+changed_this_drag = set()
+
 # Function to Draw Grid
 def draw_grid():
     for row in range(ROWS):
@@ -100,10 +103,7 @@ def draw_grid():
 
             rect = pygame.Rect(x, y, PIXEL_SIZE, PIXEL_SIZE)
 
-            # Fill with saved color
             pygame.draw.rect(screen, grid[row][col], rect)
-
-            # Draw border
             pygame.draw.rect(screen, GRAY, rect, 2)
 
 # Function to Cycle Colors
@@ -115,16 +115,23 @@ def cycle_color(current_color):
 
     return COLOR_CYCLE[next_index]
 
-# Function to Draw Grid
-def draw_grid():
-    for x in range(0, WIDTH, PIXEL_SIZE):
-        for y in range(0, HEIGHT, PIXEL_SIZE):
-            rect = pygame.Rect(x, y, PIXEL_SIZE, PIXEL_SIZE)
-            pygame.draw.rect(screen, BLACK, rect)   # Fill square
-            pygame.draw.rect(screen, GRAY, rect, 2) # Gray border
+# Function to Paint Square
+def paint_square(mouse_x, mouse_y):
+    col = mouse_x // PIXEL_SIZE
+    row = mouse_y // PIXEL_SIZE
+
+    if row < ROWS and col < COLS:
+        cell = (row, col)
+
+        # Prevent repeated cycling on same square during one drag
+        if cell not in changed_this_drag:
+            current_color = grid[row][col]
+            grid[row][col] = cycle_color(current_color)
+            changed_this_drag.add(cell)
 
 # Main Game Loop
 running = True
+mouse_held = False
 
 while running:
     for event in pygame.event.get():
@@ -138,17 +145,23 @@ while running:
             if event.key == pygame.K_ESCAPE:
                 running = False
 
-        # Mouse click cycles through colors
+        # Mouse button pressed
         if event.type == pygame.MOUSEBUTTONDOWN:
+            mouse_held = True
+            changed_this_drag.clear()
+
             mouse_x, mouse_y = pygame.mouse.get_pos()
+            paint_square(mouse_x, mouse_y)
 
-            col = mouse_x // PIXEL_SIZE
-            row = mouse_y // PIXEL_SIZE
+        # Mouse button released
+        if event.type == pygame.MOUSEBUTTONUP:
+            mouse_held = False
+            changed_this_drag.clear()
 
-            if row < ROWS and col < COLS:
-                current_color = grid[row][col]
-                grid[row][col] = cycle_color(current_color)
-
+        # Mouse drag painting
+        if event.type == pygame.MOUSEMOTION and mouse_held:
+            mouse_x, mouse_y = pygame.mouse.get_pos()
+            paint_square(mouse_x, mouse_y)
 
   # Background Color
     screen.fill(BLACK)
