@@ -50,7 +50,7 @@ if PIXEL_SIZE <= 0:
 
 # Number of rows and columns
 ROWS = HEIGHT // PIXEL_SIZE
-COLS = WIDTH // PIXEL_SIZE
+COLS = DRAW_WIDTH // PIXEL_SIZE
 
 # Initialize Pygame
 pygame.init()
@@ -120,11 +120,11 @@ def draw_sidebar():
     sidebar_rect = pygame.Rect(DRAW_WIDTH, 0, SIDEBAR_WIDTH, HEIGHT)
     pygame.draw.rect(screen, DARK_GRAY, sidebar_rect)
 
-    box_size = 50
-    padding = 15
+    box_size = 35
+    padding = 10
 
     for i, color in enumerate(PALETTE_COLORS):
-        x = DRAW_WIDTH + 35
+        x = DRAW_WIDTH + 40
         y = padding + i * (box_size + padding)
 
         color_rect = pygame.Rect(x, y, box_size, box_size)
@@ -140,11 +140,11 @@ def draw_sidebar():
 def select_color(mouse_x, mouse_y):
     global selected_color
 
-    box_size = 50
-    padding = 15
+    box_size = 35
+    padding = 10
 
     for i, color in enumerate(PALETTE_COLORS):
-        x = DRAW_WIDTH + 35
+        x = DRAW_WIDTH + 40
         y = padding + i * (box_size + padding)
 
         color_rect = pygame.Rect(x, y, box_size, box_size)
@@ -207,6 +207,7 @@ while running:
   # Background Color
     screen.fill(BLACK)
     draw_grid()
+    draw_sidebar()
     pygame.display.update()
 
 # Close Program
