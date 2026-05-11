@@ -99,8 +99,11 @@ for row in range(ROWS):
         grid_row.append(BLACK)  # Start all squares as black
     grid.append(grid_row)
 
-# Keeps track of squares already changed during drag
-changed_this_drag = set()
+# Function to Clear Canvas
+def clear_canvas():
+    for row in range(ROWS):
+        for col in range(COLS):
+            grid[row][col] = BLACK
 
 # Function to Draw Grid
 def draw_grid():
@@ -167,6 +170,8 @@ def paint_square(mouse_x, mouse_y):
 running = True
 mouse_held = False
 
+print("Press C to clear the canvas")
+
 while running:
     for event in pygame.event.get():
 
@@ -178,6 +183,10 @@ while running:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 running = False
+
+            # C clears canvas
+            if event.key == pygame.K_c:
+                clear_canvas()
 
         # Mouse pressed
         if event.type == pygame.MOUSEBUTTONDOWN:
