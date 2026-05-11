@@ -30,6 +30,10 @@ else:
     HEIGHT = 600
     canvas_type = "Square"
 
+# Sidebar Settings
+SIDEBAR_WIDTH = 120
+DRAW_WIDTH = WIDTH - SIDEBAR_WIDTH
+
 # Grid Settings
 # Start with preferred size
 PREFERRED_PIXEL_SIZE = 60
@@ -66,9 +70,10 @@ PURPLE = (128, 0, 128)
 PINK = (255, 105, 180)
 BROWN = (139, 69, 19)
 GRAY = (120, 120, 120)
+DARK_GRAY = (40, 40, 40)
 
-# Click cycle order
-COLOR_CYCLE = [
+# Click palette colors
+PALETTE_COLORS = [
     BLACK,   # Starting color
     WHITE,   # 1 click
     RED,     # 2 clicks
@@ -80,6 +85,9 @@ COLOR_CYCLE = [
     PINK,    # 8 clicks
     BROWN    # 9 clicks
 ]
+
+# Default selected color
+selected_color = WHITE
 
 # Grid Data Storage
 # Store the color of each square
@@ -106,28 +114,54 @@ def draw_grid():
             pygame.draw.rect(screen, grid[row][col], rect)
             pygame.draw.rect(screen, GRAY, rect, 2)
 
-# Function to Cycle Colors
-def cycle_color(current_color):
-    current_index = COLOR_CYCLE.index(current_color)
+# Function to Draw Sidebar
+def draw_sidebar():
+    # Sidebar background
+    sidebar_rect = pygame.Rect(DRAW_WIDTH, 0, SIDEBAR_WIDTH, HEIGHT)
+    pygame.draw.rect(screen, DARK_GRAY, sidebar_rect)
 
-    # Move to next color
-    next_index = (current_index + 1) % len(COLOR_CYCLE)
+    box_size = 50
+    padding = 15
 
-    return COLOR_CYCLE[next_index]
+    for i, color in enumerate(PALETTE_COLORS):
+        x = DRAW_WIDTH + 35
+        y = padding + i * (box_size + padding)
+
+        color_rect = pygame.Rect(x, y, box_size, box_size)
+
+        pygame.draw.rect(screen, color, color_rect)
+        pygame.draw.rect(screen, WHITE, color_rect, 2)
+
+        # Highlight selected color
+        if color == selected_color:
+            pygame.draw.rect(screen, GRAY, color_rect, 5)
+
+# Function to Select Color
+def select_color(mouse_x, mouse_y):
+    global selected_color
+
+    box_size = 50
+    padding = 15
+
+    for i, color in enumerate(PALETTE_COLORS):
+        x = DRAW_WIDTH + 35
+        y = padding + i * (box_size + padding)
+
+        color_rect = pygame.Rect(x, y, box_size, box_size)
+
+        if color_rect.collidepoint(mouse_x, mouse_y):
+            selected_color = color
 
 # Function to Paint Square
 def paint_square(mouse_x, mouse_y):
+    if mouse_x >= DRAW_WIDTH:
+        return
+
     col = mouse_x // PIXEL_SIZE
     row = mouse_y // PIXEL_SIZE
 
     if row < ROWS and col < COLS:
-        cell = (row, col)
-
-        # Prevent repeated cycling on same square during one drag
-        if cell not in changed_this_drag:
-            current_color = grid[row][col]
-            grid[row][col] = cycle_color(current_color)
-            changed_this_drag.add(cell)
+        grid[row][col] = selected_color
 
 # Main Game Loop
 running = True
@@ -145,23 +179,30 @@ while running:
             if event.key == pygame.K_ESCAPE:
                 running = False
 
-        # Mouse button pressed
+        # Mouse pressed
         if event.type == pygame.MOUSEBUTTONDOWN:
             mouse_held = True
-            changed_this_drag.clear()
 
             mouse_x, mouse_y = pygame.mouse.get_pos()
-            paint_square(mouse_x, mouse_y)
 
-        # Mouse button released
+            # Clicking sidebar selects color
+            if mouse_x >= DRAW_WIDTH:
+                select_color(mouse_x, mouse_y)
+
+            # Clicking canvas paints
+            else:
+                paint_square(mouse_x, mouse_y)
+            # Mouse released
         if event.type == pygame.MOUSEBUTTONUP:
             mouse_held = False
-            changed_this_drag.clear()
 
-        # Mouse drag painting
+        # Drag painting
         if event.type == pygame.MOUSEMOTION and mouse_held:
             mouse_x, mouse_y = pygame.mouse.get_pos()
-            paint_square(mouse_x, mouse_y)
+
+            if mouse_x < DRAW_WIDTH:
+                paint_square(mouse_x, mouse_y)
+
 
   # Background Color
     screen.fill(BLACK)
