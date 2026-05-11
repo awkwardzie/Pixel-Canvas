@@ -43,6 +43,9 @@ GRAY = (50, 50, 50)
 # Background Color
 screen.fill(BLACK)
 
+# Grid Settings
+PIXEL_SIZE = 5  # Each square is 5x5 pixels
+
 # Function to Draw Grid
 def draw_grid():
     for x in range(0, WIDTH, PIXEL_SIZE):
