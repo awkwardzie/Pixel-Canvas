@@ -44,7 +44,18 @@ GRAY = (120, 120, 120)
 screen.fill(BLACK)
 
 # Grid Settings
-PIXEL_SIZE = 60  # Each square is 5x5 pixels
+# Start with preferred size
+PREFERRED_PIXEL_SIZE = 60
+
+# Adjust pixel size so grid fits perfectly
+PIXEL_SIZE = min(
+    WIDTH // (WIDTH // PREFERRED_PIXEL_SIZE),
+    HEIGHT // (HEIGHT // PREFERRED_PIXEL_SIZE)
+)
+
+# Safety check if window is smaller than preferred size
+if PIXEL_SIZE <= 0:
+    PIXEL_SIZE = 60
 
 # Function to Draw Grid
 def draw_grid():
@@ -52,7 +63,7 @@ def draw_grid():
         for y in range(0, HEIGHT, PIXEL_SIZE):
             rect = pygame.Rect(x, y, PIXEL_SIZE, PIXEL_SIZE)
             pygame.draw.rect(screen, BLACK, rect)   # Fill square
-            pygame.draw.rect(screen, GRAY, rect, 1) # Gray border
+            pygame.draw.rect(screen, GRAY, rect, 2) # Gray border
 
 # Main Game Loop
 running = True
