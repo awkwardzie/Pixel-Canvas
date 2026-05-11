@@ -57,7 +57,29 @@ pygame.display.set_caption(f"Pixel Canvas - {canvas_type}")
 # Colors
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
+RED = (255, 0, 0)
+ORANGE = (255, 165, 0)
+YELLOW = (255, 255, 0)
+GREEN = (0, 255, 0)
+BLUE = (0, 0, 255)
+PURPLE = (128, 0, 128)
+PINK = (255, 105, 180)
+BROWN = (139, 69, 19)
 GRAY = (120, 120, 120)
+
+# Click cycle order
+COLOR_CYCLE = [
+    BLACK,   # Starting color
+    WHITE,   # 1 click
+    RED,     # 2 clicks
+    ORANGE,  # 3 clicks
+    YELLOW,  # 4 clicks
+    GREEN,   # 5 clicks
+    BLUE,    # 6 clicks
+    PURPLE,  # 7 clicks
+    PINK,    # 8 clicks
+    BROWN    # 9 clicks
+]
 
 # Grid Data Storage
 # Store the color of each square
@@ -84,6 +106,14 @@ def draw_grid():
             # Draw border
             pygame.draw.rect(screen, GRAY, rect, 2)
 
+# Function to Cycle Colors
+def cycle_color(current_color):
+    current_index = COLOR_CYCLE.index(current_color)
+
+    # Move to next color
+    next_index = (current_index + 1) % len(COLOR_CYCLE)
+
+    return COLOR_CYCLE[next_index]
 
 # Function to Draw Grid
 def draw_grid():
@@ -108,17 +138,17 @@ while running:
             if event.key == pygame.K_ESCAPE:
                 running = False
 
-        # Mouse click changes black square to white
+        # Mouse click cycles through colors
         if event.type == pygame.MOUSEBUTTONDOWN:
             mouse_x, mouse_y = pygame.mouse.get_pos()
 
             col = mouse_x // PIXEL_SIZE
             row = mouse_y // PIXEL_SIZE
 
-            # Make sure click is inside grid
             if row < ROWS and col < COLS:
-                if grid[row][col] == BLACK:
-                    grid[row][col] = WHITE
+                current_color = grid[row][col]
+                grid[row][col] = cycle_color(current_color)
+
 
   # Background Color
     screen.fill(BLACK)
